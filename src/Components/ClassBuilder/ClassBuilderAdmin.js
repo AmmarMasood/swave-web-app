@@ -1,8 +1,19 @@
-import React from "react";
+import React,{useContext, useEffect, useState} from "react";
 import aiImage from "../../Images/group-computers-5381724.jpg";
 import "../../Styles/ModuleBuilder.css";
+import {dataContext,selectedClassContext} from "../../State/Store";
 
 function ClassBuilderAdmin() {
+  const [data, setData] = useContext(dataContext);
+  const [selectedClass, setSelectedClass] = useContext(selectedClassContext);
+  const [className, setClassName] = useState("");
+  const [classSummary, setClassSummary] = useState("");
+  useEffect(() => {
+    if(selectedClass>=0){
+      setClassName(data.moduleClasses[selectedClass].adminSuggestionForClass.className);
+      setClassSummary(data.moduleClasses[selectedClass].adminSuggestionForClass.classSummary);
+    }
+  }, [])
   return (
     <div>
       {/*  */}
@@ -16,7 +27,7 @@ function ClassBuilderAdmin() {
       <div className="module-name-container-admin">
         <label className="module-name-label-admin">Module Name</label>
         <div className="module-name-input-container">
-          <input className="module-name-input-admin" />
+          <input className="module-name-input-admin" value={data.adminSuggestionForModule.moduleName} disabled={true}/>
           {/* <EditOutlined style={{ color: "#195a8b" }} /> */}
         </div>
       </div>
@@ -25,7 +36,7 @@ function ClassBuilderAdmin() {
       <div className="module-name-container-admin">
         <label className="module-name-label-admin">Class Name</label>
         <div className="module-name-input-container">
-          <input className="module-name-input-admin" />
+          <input className="module-name-input-admin" value={className} disabled={true}/>
           {/* <EditOutlined style={{ color: "#195a8b" }} /> */}
         </div>
       </div>
@@ -50,6 +61,7 @@ function ClassBuilderAdmin() {
             name="message"
             rows="3"
             cols="10"
+            value={classSummary} disabled={true}
           ></textarea>
           {/* <EditOutlined style={{ color: "#195a8b" }} /> */}
         </div>

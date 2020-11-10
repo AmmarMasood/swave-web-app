@@ -1,5 +1,5 @@
-import { React, useContext } from "react";
-import { componentContext } from "../../State/Store";
+import { React, useContext, useEffect } from "react";
+import { componentContext,dataContext, selectedClassContext,userContext } from "../../State/Store";
 import "../../Styles/MainDashboard.css";
 import {
   SettingOutlined,
@@ -9,6 +9,8 @@ import {
   CalendarOutlined,
   TeamOutlined
 } from "@ant-design/icons";
+import axios from "axios";
+import {server} from "../../Server";
 import logo from "../../Images/logo.png";
 import ModuleBuilder from "../ModuleBuilder/ModuleBuilder";
 import ModuleBuilderAdmin from "../ModuleBuilder/ModuleBuilderAdmin";
@@ -18,9 +20,50 @@ import SessionBuilder from "../SessionBuilder/SessionBuilder";
 import SessionBuilderAdmin from "../SessionBuilder/SessionBuilderAdmin";
 import SesssionBuilderSecond from "../SessionBuilder/SessionBuilderSecond";
 import SesssionBuilderSecondAdmin from "../SessionBuilder/SessionBuilderSecondAdmin";
+import setAuthToken from "../../setAuthToken";
+import {Popover, Button} from 'antd';
 
-function MainDashboard() {
+
+function MainDashboard(props) {
   const [displayComponent, setDisplayComponent] = useContext(componentContext);
+  const [data, setData] = useContext(dataContext)
+  const [user, setUser] = useContext(userContext)
+  const [selectedClass, setSelectedClass]= useContext(selectedClassContext)
+  const settingContent = (
+    <div>
+     <Button type="primary" style={{backgroundColor: "#195a8b", color: "#fff", margin:"10px"}} onClick={() => {
+       localStorage.removeItem("token");
+       props.history.push("/");
+       setData({ moduleName: "",
+       divisionName: "",
+       moduleSummary: "",
+       moduleClasses: [],
+       adminSuggestionForModule:{
+         moduleName: "",
+         divisionName: "",
+         moduleSummary: ""
+       }})
+     }}>Logout</Button>
+    </div>
+  );
+  useEffect(() => {
+    if (!localStorage.getItem("token")) {
+      props.history.push("/");
+    }else{
+      setAuthToken(localStorage.getItem("token"));
+      axios.get(`${server}/v1/module`).then(res => {
+        console.log(res.data);
+        if(Object.keys(res.data).length > 0){
+        setData(res.data)
+        }
+        console.log(res);
+        console.log(Object.keys(res.data).length)
+      }).catch(err => {
+        console.log(err);
+        alert("Error while getting data from backend")
+      })
+    }
+  }, []);
 
   return (
     <div className="dashboard-container">
@@ -37,6 +80,8 @@ function MainDashboard() {
               SWave Learning Platform
             </div>
           </div>
+          {/*  */}
+          <div style={{color: "#fff"}}>{selectedClass >= 0 && `Selected Class: ${selectedClass+1}`}</div>
           {/* ----- */}
           <div className="sidebar-buttons">
             <button
@@ -92,7 +137,11 @@ function MainDashboard() {
                 <BellOutlined style={{ color: "#fff", fontSize: "25px" }} />
               </div>
               <div>
-                <SettingOutlined style={{ color: "#fff", fontSize: "25px" }} />
+              <Popover placement="topLeft" content={settingContent} trigger="click">
+              <SettingOutlined style={{ color: "#fff", fontSize: "25px", cursor: "pointer" }} />
+      </Popover>
+
+              
               </div>
             </div>
             <div className="sidebar-name-image">
@@ -102,7 +151,7 @@ function MainDashboard() {
                 alt="user"
                 style={{ borderRadius: "50%" }}
               />
-              <div style={{ color: "#fff", paddingLeft: "10px" }}>Arik T</div>
+              <div style={{ color: "#fff", paddingLeft: "10px" }}>{user.username ? user.username : ""}</div>
             </div>
             <div style={{ color: "#fff", padding: "5px", fontSize: "10px" }}>
               <div>TM. Patent Pending. All Right Reversed To</div>

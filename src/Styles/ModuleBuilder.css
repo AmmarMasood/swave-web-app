@@ -161,3 +161,7 @@
   font-weight: 600;
   width: fit-content;
 }
+.tag-hover:hover {
+  cursor: pointer;
+  background-color: #a7dfcd;
+}

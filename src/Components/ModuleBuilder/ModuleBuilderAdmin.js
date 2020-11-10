@@ -1,8 +1,10 @@
-import React from "react";
+import React, {useContext} from "react";
 import aiImage from "../../Images/group-computers-5381724.jpg";
 import "../../Styles/ModuleBuilder.css";
+import {dataContext} from "../../State/Store";
 
 function ModuleBuilderAdmin() {
+  const [data, setData] = useContext(dataContext);
   return (
     <div>
       {/*  */}
@@ -16,7 +18,7 @@ function ModuleBuilderAdmin() {
       <div className="module-name-container-admin">
         <label className="module-name-label-admin">Module Name</label>
         <div className="module-name-input-container">
-          <input className="module-name-input-admin" />
+          <input className="module-name-input-admin" value={data.adminSuggestionForModule.moduleName} disabled={true}/>
           {/* <EditOutlined style={{ color: "#195a8b" }} /> */}
         </div>
       </div>
@@ -25,7 +27,7 @@ function ModuleBuilderAdmin() {
       <div className="module-name-container-admin">
         <label className="module-name-label-admin">Division Name</label>
         <div className="module-name-input-container">
-          <input className="module-name-input-admin" />
+          <input className="module-name-input-admin" value={data.adminSuggestionForModule.divisionName} disabled={true}/>
           {/* <EditOutlined style={{ color: "#195a8b" }} /> */}
         </div>
       </div>
@@ -50,12 +52,13 @@ function ModuleBuilderAdmin() {
             name="message"
             rows="3"
             cols="10"
+            value={data.adminSuggestionForModule.moduleSummary} disabled={true}
           ></textarea>
           {/* <EditOutlined style={{ color: "#195a8b" }} /> */}
         </div>
       </div>
       {/*  */}
-      <div className="module-name-container-admin">
+      {/* <div className="module-name-container-admin">
         <label className="module-name-label-admin">Module Goal</label>
         <div
           className="module-name-input-container"
@@ -66,10 +69,10 @@ function ModuleBuilderAdmin() {
             name="message"
             rows="3"
             cols="10"
-          ></textarea>
+          ></textarea> */}
           {/* <EditOutlined style={{ color: "#195a8b" }} /> */}
-        </div>
-      </div>
+        {/* </div> */}
+      {/* </div> */}
     </div>
   );
 }

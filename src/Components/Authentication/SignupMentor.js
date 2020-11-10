@@ -1,9 +1,38 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import "../../Styles/Authentication.css";
 import logo from "../../Images/logo.png";
-import { Link } from "react-router-dom";
+import { Link, withRouter } from "react-router-dom";
+import axios from "axios";
+import { server } from "../../Server";
 
-function SignupMentor() {
+function SignupMentor(props) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    if (localStorage.getItem("token")) {
+      props.history.push("/main-dashboard");
+    }
+  }, []);
+
+  function handleSignup() {
+    if (email.length <= 0 || password.length <= 0) {
+      alert("Email or Password Missing");
+      return;
+    }
+    setLoading(true);
+    axios
+      .post(`${server}/auth/signup`, { username: email, password })
+      .then(res => {
+        props.history.push("/");
+        setLoading(false);
+      })
+      .catch(err => {
+        err.response && alert(err.response.data.message);
+        console.log(err);
+        setLoading(false);
+      });
+  }
   return (
     <div className="auth-background">
       <div className="auth-head">
@@ -32,7 +61,12 @@ function SignupMentor() {
               >
                 Email
               </label>
-              <input className="input" />
+              <input
+                className="input"
+                type="email"
+                value={email}
+                onChange={e => setEmail(e.target.value)}
+              />
             </div>
             <div style={{ marginTop: "20px" }}>
               <label
@@ -45,9 +79,25 @@ function SignupMentor() {
               >
                 Password
               </label>
-              <input className="input" />
+              <input
+                className="input"
+                type="password"
+                value={password}
+                onChange={e => setPassword(e.target.value)}
+              />
             </div>
-            <button className="signup-button">Signup for your account</button>
+            <button
+              className="signup-button"
+              onClick={handleSignup}
+              disabled={loading ? true : false}
+              style={{
+                backgroundColor: loading
+                  ? "rgba(25,90,139, 0.6)"
+                  : "rgb(25,90,139)"
+              }}
+            >
+              Signup for your account
+            </button>
             {/* <div className="forgot-password-text">Forgot your password?</div> */}
           </div>
         </div>
@@ -68,4 +118,4 @@ function SignupMentor() {
   );
 }
 
-export default SignupMentor;
+export default withRouter(SignupMentor);
