@@ -91,7 +91,7 @@ function ClassBuilder() {
      
         <label className="module-name-label">Module Name</label>
         <div className="module-name-input-container">
-          <input className="module-name-input" disabled={true} value={data.moduleName} name="moduleName" onChange={(e) => handleChange(e)}/>
+          <input className="module-name-input"   disabled={localStorage.getItem("role") === "ADMIN" ? true : false} value={data.moduleName} name="moduleName" onChange={(e) => handleChange(e)}/>
           <EditOutlined style={{ color: "#195a8b" }} />
         </div>
       </div>
@@ -99,7 +99,10 @@ function ClassBuilder() {
       <div className="module-name-container">
         <label className="module-name-label">Class Name</label>
         <div className="module-name-input-container">
-          <input className="module-name-input" value={className} onChange={(e) => setClassName(e.target.value)}/>
+          <input className="module-name-input" value={className} 
+          onChange={(e) => setClassName(e.target.value)}
+          disabled={localStorage.getItem("role") === "ADMIN" ? true : false}
+          />
           <EditOutlined style={{ color: "#195a8b" }}/>
         </div>
       </div>
@@ -126,6 +129,7 @@ function ClassBuilder() {
             rows="3"
             cols="10"
             value={classSummary} onChange={(e) => setClassSummary(e.target.value)}
+            disabled={localStorage.getItem("role") === "ADMIN" ? true : false}
           ></textarea>
           <EditOutlined style={{ color: "#195a8b" }} />
         </div>
@@ -146,13 +150,14 @@ function ClassBuilder() {
           <EditOutlined style={{ color: "#195a8b" }} />
         </div>
       </div> */}
-
+{localStorage.getItem("role") === "ADMIN" ? "" : <>
       <button className="add-notes-button" onClick={addClass}>
       <PlusOutlined /> {selectedClass < 0 ? "Create Class" : 'Update Class'}
       </button>
       <button className="add-notes-button" onClick={() => setEditClassOpen(true)}>
       Open Class
       </button>
+</>}
 
       <div className="middle-part" style={{ height: "95vh" }}>
         <div style={{ textAlign: "center" }}>

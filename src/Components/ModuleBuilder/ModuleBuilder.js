@@ -23,10 +23,12 @@ function ModuleBuilder() {
   }
   function saveModule(){
     setAuthToken(localStorage.getItem("token"));
+
     axios.post(`${server}/v1/module`, data).then(res => {console.log(res); alert("Saved")}).catch(err => console.log(err))
   }
   return (
     <div>
+      
       {/*  */}
       <div className="mentor">
         <img className="mentor-image" src={mentorImage} alt="mentor" />
@@ -36,7 +38,9 @@ function ModuleBuilder() {
       <div className="module-name-container">
         <label className="module-name-label">Module Name</label>
         <div className="module-name-input-container">
-          <input className="module-name-input" value={data.moduleName} name="moduleName" onChange={(e) => handleChange(e)}/>
+          <input className="module-name-input" value={data.moduleName} name="moduleName" onChange={(e) => handleChange(e)}
+          disabled={localStorage.getItem("role") === "ADMIN" ? true : false}
+          />
           <EditOutlined style={{ color: "#195a8b" }} />
         </div>
       </div>
@@ -44,7 +48,8 @@ function ModuleBuilder() {
       <div className="module-name-container">
         <label className="module-name-label">Division Name</label>
         <div className="module-name-input-container">
-          <input className="module-name-input" value={data.divisionName} name="divisionName" onChange={(e) => handleChange(e)}/>
+          <input className="module-name-input" value={data.divisionName} name="divisionName" onChange={(e) => handleChange(e)}
+          disabled={localStorage.getItem("role") === "ADMIN" ? true : false}/>
           <EditOutlined style={{ color: "#195a8b" }} />
         </div>
       </div>
@@ -71,6 +76,7 @@ function ModuleBuilder() {
             rows="3"
             cols="10"
             value={data.moduleSummary} name="moduleSummary"
+            disabled={localStorage.getItem("role") === "ADMIN" ? true : false}
             onChange={(e) => handleChange(e)}
           ></textarea>
           <EditOutlined style={{ color: "#195a8b" }} />
@@ -96,6 +102,7 @@ function ModuleBuilder() {
       <button className="add-notes-button">
         <PlusOutlined /> Add Notes
       </button>
+     
 {console.log(data)}
       <div className="middle-part" style={{ height: "95vh" }}>
         <div style={{ textAlign: "center" }}>

@@ -136,7 +136,7 @@ function SessionBuilder() {
       <div className="module-name-container">
         <label className="module-name-label">Session Name</label>
         <div className="module-name-input-container">
-          <input className="module-name-input" value={sessionName} onChange={e => setSessionName(e.target.value)}/>
+          <input className="module-name-input" value={sessionName} onChange={e => setSessionName(e.target.value)}  disabled={localStorage.getItem("role") === "ADMIN" ? true : false}/>
           <EditOutlined style={{ color: "#195a8b" }} />
         </div>
       </div>
@@ -145,17 +145,20 @@ function SessionBuilder() {
        <div className="module-name-container">
         <label className="module-name-label">Session Time</label>
         <div className="module-name-input-container">
-          <input className="module-name-input" value={sessionTime} onChange={e => setSessionTime(e.target.value)}/>
+          <input className="module-name-input" value={sessionTime} onChange={e => setSessionTime(e.target.value)}  disabled={localStorage.getItem("role") === "ADMIN" ? true : false}/>
           <EditOutlined style={{ color: "#195a8b" }} />
         </div>
       </div>
       {/*  */}
+      {localStorage.getItem("role") === "ADMIN" ? "" : <>
       <button className="add-notes-button" onClick={selectedClass<0 ? () => alert("Please select class first") : addSession}>
       <PlusOutlined /> {selectedSession < 0 ? "Create Session" : 'Update Session'}
       </button>
       <button className="add-notes-button" onClick={selectedClass<0 ? () => alert("Please select class first") : () => setEditSessionOpen(true)}>
       Open Session
       </button>
+</>}
+      
       {/*  */}
       {/* <div className="module-name-container">
         <label className="module-name-label">Number Of Classes</label>

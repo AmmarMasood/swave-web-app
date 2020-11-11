@@ -28,6 +28,7 @@ function Login(props) {
         console.log(res);
         // const user = {id:res.data.id, name: res.data.username, role: res.data.roles[0].name}
         localStorage.setItem("token", res.data.accessToken);
+        localStorage.setItem("role", res.data.roles[0].name)
         setAuthToken(res.data.accessToken);
         const m ={role: res.data.roles[0].name, username: res.data.username};
         setUser(m);

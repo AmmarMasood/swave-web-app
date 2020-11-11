@@ -1,5 +1,5 @@
 import { React, useContext, useEffect } from "react";
-import { componentContext,dataContext, selectedClassContext,userContext } from "../../State/Store";
+import { componentContext,dataContext, adminAllModules,selectedClassContext,userContext,selectedSessionContext } from "../../State/Store";
 import "../../Styles/MainDashboard.css";
 import {
   SettingOutlined,
@@ -29,11 +29,16 @@ function MainDashboard(props) {
   const [data, setData] = useContext(dataContext)
   const [user, setUser] = useContext(userContext)
   const [selectedClass, setSelectedClass]= useContext(selectedClassContext)
+  const [allModules, setAllModules] = useContext(adminAllModules);
+  const [selectedSession, setSelectedSession] = useContext(selectedSessionContext);
   const settingContent = (
     <div>
      <Button type="primary" style={{backgroundColor: "#195a8b", color: "#fff", margin:"10px"}} onClick={() => {
        localStorage.removeItem("token");
+       localStorage.removeItem("role");
        props.history.push("/");
+       setSelectedClass(-1); 
+       setSelectedSession(-1)
        setData({ moduleName: "",
        divisionName: "",
        moduleSummary: "",
@@ -51,6 +56,16 @@ function MainDashboard(props) {
       props.history.push("/");
     }else{
       setAuthToken(localStorage.getItem("token"));
+      if(localStorage.getItem("role") === "ADMIN"){
+        axios.get(`${server}/v1/module/admin/all`).then(res => {
+          console.log(res.data);
+          console.log(res);
+          setAllModules(res.data.moduleResponses);
+        }).catch(err => {
+          console.log(err);
+      alert("Unable to get data from backend");
+        })
+      } else{
       axios.get(`${server}/v1/module`).then(res => {
         console.log(res.data);
         if(Object.keys(res.data).length > 0){
@@ -63,6 +78,7 @@ function MainDashboard(props) {
         alert("Error while getting data from backend")
       })
     }
+  }
   }, []);
 
   return (
